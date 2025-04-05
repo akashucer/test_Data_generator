@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fake Data Generator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary-color: #f97316;
+  --secondary-hover: #ea580c;
+  --light-bg: #f9fafb;
+  --dark-bg: #111827;
+  --card-bg: #ffffff;
+  --card-dark-bg: #1f2937;
+  --text-color: #1f2937;
+  --text-dark-color: #e5e7eb;
+  --border-color: #e5e7eb;
+  --border-dark-color: #374151;
+  --border-radius: 0.75rem;
+  --transition: all 0.2s ease;
+}
+
+body {
+  background-color: var(--light-bg);
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+body.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--text-dark-color);
+}
+
+.container {
+  max-width: 1200px;
+}
+
+.app-card {
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  background-color: var(--card-bg);
+  transition: var(--transition);
+}
+
+body.dark-mode .app-card {
+  background-color: var(--card-dark-bg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.app-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  padding: 2.5rem 2rem;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 60%);
+  transform: rotate(30deg);
+}
+
+.app-title {
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+  font-size: 2rem;
+  position: relative;
+}
+
+.app-subtitle {
+  opacity: 0.9;
+  font-weight: 400;
+  position: relative;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.field-header {
+  font-weight: 600;
+  padding: 1rem 0;
+  background-color: rgba(249, 250, 251, 0.5);
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
+}
+
+body.dark-mode .field-header {
+  background-color: rgba(31, 41, 55, 0.5);
+  border-bottom: 1px solid var(--border-dark-color);
+}
+
+.field-row {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  transition: var(--transition);
+  align-items: center;
+  border: 1px solid transparent;
+}
+
+.field-row:hover {
+  background-color: rgba(249, 250, 251, 0.8);
+  border-color: var(--border-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .field-row:hover {
+  background-color: rgba(31, 41, 55, 0.8);
+  border-color: var(--border-dark-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.form-control, .form-select {
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+  height: 46px;
+  transition: var(--transition);
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+body.dark-mode .form-control, 
+body.dark-mode .form-select {
+  background-color: var(--card-dark-bg);
+  border-color: var(--border-dark-color);
+  color: var(--text-dark-color);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+body.dark-mode .form-control:focus, 
+body.dark-mode .form-select:focus {
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+}
+
+.input-group-text {
+  border-radius: 0.5rem 0 0 0.5rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  transition: var(--transition);
+}
+
+body.dark-mode .input-group-text {
+  background-color: var(--card-dark-bg);
+  border-color: var(--border-dark-color);
+  color: var(--text-dark-color);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+  background-color: var(--secondary-hover);
+  border-color: var(--secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+}
+
+.btn-outline-danger {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.btn-outline-danger:hover {
+  background-color: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.btn-outline-success {
+  color: #22c55e;
+  border-color: #22c55e;
+}
+
+.btn-outline-success:hover {
+  background-color: #22c55e;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 0.5rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.output-container {
+  background-color: #1e293b;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: var(--transition);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .output-container {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.output-header {
+  background-color: #334155;
+  color: white;
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.output-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.output-actions button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.output-actions button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+#output {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border: none;
+  padding: 1.5rem;
+  border-radius: 0;
+  font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
+  font-size: 0.9rem;
+  max-height: 400px;
+  overflow-y: auto;
+  transition: var(--transition);
+}
+
+.action-btns .btn {
+  min-width: 140px;
+}
+
+.badge {
+  font-weight: 500;
+  padding: 0.35em 0.65em;
+  border-radius: 0.375rem;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(79, 70, 229, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@media (max-width: 768px) {
+  .field-header {
+    display: none;
+  }
+  
+  .field-row {
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  
+  body.dark-mode .field-row {
+    border-color: var(--border-dark-color);
+  }
+  
+  .field-row .col-md-2,
+  .field-row .col-md-3,
+  .field-row .col-md-4 {
+    margin-bottom: 0.75rem;
+  }
+  
+  .action-btns {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .action-btns .btn {
+    width: 100%;
+  }
+  
+  .app-header {
+    padding: 2rem 1.5rem;
+  }
+  
+  .app-title {
+    font-size: 1.75rem;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="container py-5">
+    <div class="app-card card shadow">
+      <div class="app-header">
+        <h1 class="app-title">
+          <i class="bi bi-database-fill"></i> Test Data Generator
+        </h1>
+        <p class="app-subtitle mb-0">Create custom datasets with realistic fake data</p>
+        <button id="themeToggle" class="theme-toggle" title="Toggle dark mode">
+          <i class="bi bi-moon-fill"></i>
+        </button>
+      </div>
+      
+      <div class="card-body p-4 p-md-5">
+  <!-- Header Row -->
+  <div class="row text-center field-header">
+    <div class="col-md-2">Field Name</div>
+    <div class="col-md-3">Type</div>
+    <div class="col-md-4">Sample (optional)</div>
+    <div class="col-md-3">Actions</div>
+  </div>
+
+  <!-- Dynamic Fields -->
+  <form id="fieldForm">
+    <div id="fieldRows" class="mb-4"></div>
+  </form>
+
+  <!-- Controls Row -->
+  <div class="row mt-5 align-items-center">
+    <div class="col-md-4 col-lg-3 mb-3 mb-md-0">
+      <label for="count" class="form-label fw-medium">Number of Records</label>
+      <div class="input-group">
+        <span class="input-group-text">
+          <i class="bi bi-123"></i>
+        </span>
+        <input type="number" id="count" value="5" min="1" class="form-control">
+      </div>
+    </div>
+    <div class="col-md-8 col-lg-9 d-flex gap-3 align-items-end justify-content-end action-btns">
+      <button type="button" class="btn btn-primary" onclick="generate()">
+        <i class="bi bi-magic"></i> Generate
+      </button>
+      <button type="button" class="btn btn-secondary" onclick="download()">
+        <i class="bi bi-download"></i> Download JSON
+      </button>
+    </div>
+  </div>
+
+  <!-- Output -->
+  <div class="output-container mt-5">
+    <div class="output-header">
+      <h5 class="mb-0">Generated Data Preview</h5>
+      <div class="d-flex align-items-center gap-3">
+        <span class="badge bg-light text-dark">First 5 Records</span>
+        <div class="output-actions">
+          <button id="copyBtn" title="Copy to clipboard">
+            <i class="bi bi-clipboard"></i>
+          </button>
+          <button id="expandBtn" title="Expand/Collapse">
+            <i class="bi bi-arrows-angle-expand"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <pre id="output">No data generated yet. Click the Generate button to create data.</pre>
+  </div>
+</div>
+    </div>
+  </div>
+
+  <script>
+    // Store the generated data
+    let generatedData = [];
+    
+    // Field types available
+    const fieldTypes = [
+      'fullName', 'firstName', 'lastName', 'email', 'phone',
+      'address', 'city', 'state', 'zipCode', 'country',
+      'company', 'jobTitle', 'department',
+      'uuid', 'id', 'boolean',
+      'date', 'time', 'datetime',
+      'number', 'float', 'percentage',
+      'word', 'sentence', 'paragraph',
+      'color', 'imageUrl', 'url',
+      'creditCard', 'iban', 'bitcoinAddress',
+      'custom'
+    ];
+    
+    // Add a field row when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      addField();
+    });
+    
+    // Function to add a new field
+    function addField() {
+  const fieldRows = document.getElementById('fieldRows');
+  const fieldId = Date.now(); // Unique ID for the field
+  
+  const fieldRow = document.createElement('div');
+  fieldRow.className = 'row field-row fade-in';
+  fieldRow.id = `field-${fieldId}`;
+  
+  // Field name input
+  const nameCol = document.createElement('div');
+  nameCol.className = 'col-md-3';
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.className = 'form-control';
+  nameInput.placeholder = 'Field name';
+  nameInput.required = true;
+  nameCol.appendChild(nameInput);
+  
+  // Field type select
+  const typeCol = document.createElement('div');
+  typeCol.className = 'col-md-3';
+  const typeSelect = document.createElement('select');
+  typeSelect.className = 'form-select';
+  
+  // Add options to the select
+  fieldTypes.forEach(type => {
+    const option = document.createElement('option');
+    option.value = type;
+    option.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+    typeSelect.appendChild(option);
+  });
+  
+  typeCol.appendChild(typeSelect);
+  
+  // Sample input
+  const sampleCol = document.createElement('div');
+  sampleCol.className = 'col-md-4';
+  const sampleInput = document.createElement('input');
+  sampleInput.type = 'text';
+  sampleInput.className = 'form-control';
+  sampleInput.placeholder = 'Sample or format (optional)';
+  sampleCol.appendChild(sampleInput);
+  
+  // Action buttons
+  const actionCol = document.createElement('div');
+  actionCol.className = 'col-md-2';
+  
+  const actionButtons = document.createElement('div');
+  actionButtons.className = 'action-buttons';
+  
+  // Add button
+  const addBtn = document.createElement('button');
+  addBtn.type = 'button';
+  addBtn.className = 'btn btn-outline-success btn-icon';
+  addBtn.innerHTML = '<i class="bi bi-plus"></i>';
+  addBtn.title = 'Add new field';
+  addBtn.onclick = function() {
+    addField();
+  };
+  
+  // Delete button
+  const deleteBtn = document.createElement('button');
+  deleteBtn.type = 'button';
+  deleteBtn.className = 'btn btn-outline-danger btn-icon';
+  deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+  deleteBtn.title = 'Remove field';
+  deleteBtn.onclick = function() {
+    // Don't delete if it's the only field
+    const fieldCount = document.querySelectorAll('.field-row').length;
+    if (fieldCount > 1) {
+      document.getElementById(`field-${fieldId}`).remove();
+    } else {
+      alert('You need at least one field');
+    }
+  };
+  
+  actionButtons.appendChild(addBtn);
+  actionButtons.appendChild(deleteBtn);
+  actionCol.appendChild(actionButtons);
+  
+  // Append all columns to the row
+  fieldRow.appendChild(nameCol);
+  fieldRow.appendChild(typeCol);
+  fieldRow.appendChild(sampleCol);
+  fieldRow.appendChild(actionCol);
+  
+  // Append the row to the container
+  fieldRows.appendChild(fieldRow);
+}
+    
+    // Generate fake data based on the fields
+    function generate() {
+  const count = parseInt(document.getElementById('count').value) || 5;
+  const fields = getFieldsConfig();
+  
+  if (fields.length === 0) {
+    alert('Please add at least one field');
+    return;
+  }
+  
+  // Add loading effect
+  const generateBtn = document.querySelector('.btn-primary');
+  const originalText = generateBtn.innerHTML;
+  generateBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
+  generateBtn.disabled = true;
+  
+  // Small timeout to show the loading state
+  setTimeout(() => {
+    generatedData = [];
+    
+    // Generate the specified number of records
+    for (let i = 0; i < count; i++) {
+      const record = {};
+      
+      fields.forEach(field => {
+        record[field.name] = generateFakeValue(field.type, field.sample);
+      });
+      
+      generatedData.push(record);
+    }
+    
+    // Display the first 5 records
+    const output = document.getElementById('output');
+    const displayData = generatedData.slice(0, 5);
+    output.textContent = JSON.stringify(displayData, null, 2);
+    
+    // Add success animation
+    output.classList.add('fade-in');
+    setTimeout(() => {
+      output.classList.remove('fade-in');
+    }, 300);
+    
+    // Reset button
+    generateBtn.innerHTML = originalText;
+    generateBtn.disabled = false;
+    
+    // Highlight the output container
+    document.querySelector('.output-container').classList.add('pulse');
+    setTimeout(() => {
+      document.querySelector('.output-container').classList.remove('pulse');
+    }, 2000);
+  }, 300);
+}
+    
+    // Get the configuration of all fields
+    function getFieldsConfig() {
+      const fieldRows = document.querySelectorAll('.field-row');
+      const fields = [];
+      
+      fieldRows.forEach(row => {
+        const nameInput = row.querySelector('input[type="text"]');
+        const typeSelect = row.querySelector('select');
+        const sampleInput = row.querySelectorAll('input[type="text"]')[1];
+        
+        if (nameInput.value.trim()) {
+          fields.push({
+            name: nameInput.value.trim(),
+            type: typeSelect.value,
+            sample: sampleInput.value.trim()
+          });
+        }
+      });
+      
+      return fields;
+    }
+    
+    // Generate a fake value based on the field type
+    function generateFakeValue(type, sample) {
+      // If sample is provided, use it as a template
+      if (sample && type !== 'custom') {
+        return sample + ' (sample)';
+      }
+      
+      // Generate random values based on type
+      switch (type) {
+        case 'fullName':
+          return getRandomName() + ' ' + getRandomLastName();
+        case 'firstName':
+          return getRandomName();
+        case 'lastName':
+          return getRandomLastName();
+        case 'email':
+          return getRandomName().toLowerCase() + '.' + getRandomLastName().toLowerCase() + '@example.com';
+        case 'phone':
+          return '+1-' + Math.floor(100 + Math.random() * 900) + '-' + 
+                 Math.floor(100 + Math.random() * 900) + '-' + 
+                 Math.floor(1000 + Math.random() * 9000);
+        case 'address':
+          return Math.floor(100 + Math.random() * 9900) + ' ' + getRandomStreet();
+        case 'city':
+          return getRandomCity();
+        case 'state':
+          return getRandomState();
+        case 'zipCode':
+          return Math.floor(10000 + Math.random() * 90000).toString();
+        case 'country':
+          return getRandomCountry();
+        case 'company':
+          return getRandomCompany();
+        case 'jobTitle':
+          return getRandomJobTitle();
+        case 'department':
+          return getRandomDepartment();
+        case 'uuid':
+          return generateUUID();
+        case 'id':
+          return Math.floor(1000 + Math.random() * 9000).toString();
+        case 'boolean':
+          return Math.random() > 0.5;
+        case 'date':
+          return getRandomDate();
+        case 'time':
+          return getRandomTime();
+        case 'datetime':
+          return getRandomDate() + ' ' + getRandomTime();
+        case 'number':
+          return Math.floor(Math.random() * 1000);
+        case 'float':
+          return (Math.random() * 1000).toFixed(2);
+        case 'percentage':
+          return Math.floor(Math.random() * 100) + '%';
+        case 'word':
+          return getRandomWord();
+        case 'sentence':
+          return getRandomSentence();
+        case 'paragraph':
+          return getRandomParagraph();
+        case 'color':
+          return getRandomColor();
+        case 'imageUrl':
+          return `https://picsum.photos/id/${Math.floor(Math.random() * 1000)}/200/300`;
+        case 'url':
+          return 'https://www.' + getRandomWord().toLowerCase() + '.com';
+        case 'creditCard':
+          return '4' + Math.floor(100000000000000 + Math.random() * 900000000000000).toString();
+        case 'iban':
+          return 'GB' + Math.floor(10 + Math.random() * 90) + 'BANK' + Math.floor(10000000 + Math.random() * 90000000).toString();
+        case 'bitcoinAddress':
+          return '1' + generateRandomString(33);
+        case 'custom':
+          return sample || 'Custom value';
+        default:
+          return 'Unknown type';
+      }
+    }
+    
+    // Helper functions for generating random data
+    function getRandomName() {
+      const names = ['John', 'Jane', 'Michael', 'Emily', 'David', 'Sarah', 'Robert', 'Linda', 'William', 'Patricia'];
+      return names[Math.floor(Math.random() * names.length)];
+    }
+    
+    function getRandomLastName() {
+      const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Miller', 'Davis', 'Garcia', 'Rodriguez', 'Wilson'];
+      return lastNames[Math.floor(Math.random() * lastNames.length)];
+    }
+    
+    function getRandomStreet() {
+      const streets = ['Main St', 'Oak Ave', 'Maple Rd', 'Cedar Ln', 'Pine Dr', 'Elm Blvd', 'Washington St', 'Park Ave'];
+      return streets[Math.floor(Math.random() * streets.length)];
+    }
+    
+    function getRandomCity() {
+      const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego'];
+      return cities[Math.floor(Math.random() * cities.length)];
+    }
+    
+    function getRandomState() {
+      const states = ['CA', 'TX', 'FL', 'NY', 'PA', 'IL', 'OH', 'GA', 'NC', 'MI'];
+      return states[Math.floor(Math.random() * states.length)];
+    }
+    
+    function getRandomCountry() {
+      const countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Japan', 'Brazil'];
+      return countries[Math.floor(Math.random() * countries.length)];
+    }
+    
+    function getRandomCompany() {
+      const prefixes = ['Tech', 'Global', 'Advanced', 'Future', 'Smart', 'Innovative', 'Digital', 'Creative'];
+      const suffixes = ['Systems', 'Solutions', 'Technologies', 'Industries', 'Group', 'Enterprises', 'Corp', 'Inc'];
+      return prefixes[Math.floor(Math.random() * prefixes.length)] + ' ' + 
+             suffixes[Math.floor(Math.random() * suffixes.length)];
+    }
+    
+    function getRandomJobTitle() {
+      const titles = ['Software Engineer', 'Product Manager', 'Marketing Specialist', 'Sales Representative', 
+                     'Data Analyst', 'HR Manager', 'Financial Advisor', 'Operations Director'];
+      return titles[Math.floor(Math.random() * titles.length)];
+    }
+    
+    function getRandomDepartment() {
+      const departments = ['Engineering', 'Marketing', 'Sales', 'Human Resources', 'Finance', 'Operations', 'Research', 'Support'];
+      return departments[Math.floor(Math.random() * departments.length)];
+    }
+    
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+    
+    function getRandomDate() {
+      const start = new Date(2020, 0, 1);
+      const end = new Date();
+      const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+      return date.toISOString().split('T')[0];
+    }
+    
+    function getRandomTime() {
+      const hours = Math.floor(Math.random() * 24).toString().padStart(2, '0');
+      const minutes = Math.floor(Math.random() * 60).toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+    
+    function getRandomWord() {
+      const words = ['apple', 'banana', 'orange', 'grape', 'kiwi', 'melon', 'peach', 'plum', 'cherry', 'berry'];
+      return words[Math.floor(Math.random() * words.length)];
+    }
+    
+    function getRandomSentence() {
+      const sentences = [
+        'The quick brown fox jumps over the lazy dog.',
+        'A journey of a thousand miles begins with a single step.',
+        'All that glitters is not gold.',
+        'The early bird catches the worm.',
+        'Actions speak louder than words.'
+      ];
+      return sentences[Math.floor(Math.random() * sentences.length)];
+    }
+    
+    function getRandomParagraph() {
+      return getRandomSentence() + ' ' + getRandomSentence() + ' ' + getRandomSentence();
+    }
+    
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+    
+    function generateRandomString(length) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+    
+    // Download the generated data as a JSON file
+    function download() {
+  if (generatedData.length === 0) {
+    alert('Please generate data first');
+    return;
+  }
+  
+  // Add loading effect
+  const downloadBtn = document.querySelector('.btn-secondary');
+  const originalText = downloadBtn.innerHTML;
+  downloadBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Preparing...';
+  downloadBtn.disabled = true;
+  
+  setTimeout(() => {
+    const dataStr = JSON.stringify(generatedData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'fake-data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    // Reset button with success message
+    downloadBtn.innerHTML = '<i class="bi bi-check-circle"></i> Downloaded';
+    
+    setTimeout(() => {
+      downloadBtn.innerHTML = originalText;
+      downloadBtn.disabled = false;
+    }, 2000);
+  }, 300);
+}
+
+// Theme toggle functionality
+document.getElementById('themeToggle').addEventListener('click', function() {
+  document.body.classList.toggle('dark-mode');
+  const icon = this.querySelector('i');
+  if (document.body.classList.contains('dark-mode')) {
+    icon.classList.remove('bi-moon-fill');
+    icon.classList.add('bi-sun-fill');
+  } else {
+    icon.classList.remove('bi-sun-fill');
+    icon.classList.add('bi-moon-fill');
+  }
+  
+  // Save preference
+  localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+});
+
+// Check for saved theme preference
+if (localStorage.getItem('darkMode') === 'true') {
+  document.body.classList.add('dark-mode');
+  document.querySelector('#themeToggle i').classList.remove('bi-moon-fill');
+  document.querySelector('#themeToggle i').classList.add('bi-sun-fill');
+}
+
+// Copy to clipboard functionality
+document.getElementById('copyBtn').addEventListener('click', function() {
+  const output = document.getElementById('output');
+  navigator.clipboard.writeText(output.textContent)
+    .then(() => {
+      this.innerHTML = '<i class="bi bi-check2"></i>';
+      setTimeout(() => {
+        this.innerHTML = '<i class="bi bi-clipboard"></i>';
+      }, 2000);
+    });
+});
+
+// Expand/collapse output
+document.getElementById('expandBtn').addEventListener('click', function() {
+  const output = document.getElementById('output');
+  if (output.style.maxHeight === '800px') {
+    output.style.maxHeight = '400px';
+    this.innerHTML = '<i class="bi bi-arrows-angle-expand"></i>';
+  } else {
+    output.style.maxHeight = '800px';
+    this.innerHTML = '<i class="bi bi-arrows-angle-contract"></i>';
+  }
+});
+  </script>
+</body>
+</html>
+
