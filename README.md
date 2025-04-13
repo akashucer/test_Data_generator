@@ -1,0 +1,3 @@
+- A webpage to create test data useful for testing.
+- User can Input Multiple data types along with names any optional values etc.
+- Accessible at : https://akashucer.github.io/test_Data_generator/
